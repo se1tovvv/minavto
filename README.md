@@ -13,14 +13,16 @@ flowchart LR
 
 The detection side watches for signs of micro-sleep — eyes closing, head dropping. When it fires, it calls the bracelet over the network, and the ESP32 drives the vibration motor on the driver's wrist.
 
-## The bracelet firmware
+## What's in this repo
 
-This repo holds the bracelet's **alert firmware** — a lightweight ESP32 that connects to Wi-Fi and exposes two HTTP endpoints so the detection side can trigger the alert:
+**Detection** — [`firmware/minavto_cv.py`](firmware/minavto_cv.py): the computer-vision side. Using OpenCV and dlib, it tracks the driver's face and computes the **Eye Aspect Ratio (EAR)** from the eye landmarks to catch eye-closure, flagging drowsiness and then sleep once the eyes stay shut past a set duration.
+
+**Bracelet firmware** — [`firmware/sketch_minavto.ino`](firmware/sketch_minavto.ino): a lightweight ESP32 that connects to Wi-Fi and exposes two HTTP endpoints the detection side can call to fire the alert:
 
 - `GET /start_vibration` → motor on
 - `GET /stop_vibration` → motor off
 
-It's deliberately minimal: the device is a wrist actuator, and the intelligence lives in the detection model. I built two MVP models over the course of the project.
+The device is a wrist actuator; the intelligence lives in the detection model. I built two MVP models over the course of the project.
 
 ## Hardware
 - ESP32-WROOM
@@ -29,7 +31,7 @@ It's deliberately minimal: the device is a wrist actuator, and the intelligence 
 - A companion computer runs the computer-vision model
 
 ## Tech
-`C/C++` · `ESP32` · `Computer Vision` · `Wi-Fi / HTTP` · `Arduino`
+`Python` · `OpenCV` · `dlib` · `C/C++` · `ESP32` · `Wi-Fi / HTTP` · `Arduino`
 
 ## Recognition
 🥇 **1st place, Enactus Kazakhstan**
